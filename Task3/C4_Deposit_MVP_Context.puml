@@ -1,0 +1,46 @@
+@startuml
+!include ./include/C4_Context.puml
+
+title C4 – Deposit MVP – Context
+
+Person(NewCustomer, "Новый клиент", "Физлицо, не являющееся клиентом банка. Подаёт заявку через сайт.")
+Person(ExistingCustomer, "Клиент банка", "Физлицо с действующими продуктами, использует интернет-банк.")
+Person(CallCenterAgent, "Менеджер кол-центра", "Обзванивает клиентов по заявкам на депозит.")
+Person(BackOfficeDep, "Сотр. бэк-офиса депозитов", "Подтверждает условия и открывает депозиты в АБС.")
+Person(BranchFO, "Сотр. фронт-офиса (отделение)", "Идентифицирует клиентов и оформляет договоры.")
+
+System(Website, "Публичный сайт банка", "PHP + React.js", "Позволяет новым клиентам просматривать депозиты и отправлять заявки.")
+System(InternetBank, "Интернет-банк", "ASP.NET MVC", "Онлайн-обслуживание клиентов банка, подача заявок на депозит.")
+System(DepositBackend, "Deposit Onboarding Service", "Java/Spring или .NET + MS SQL", "Принимает и хранит заявки на депозиты, интегрируется с остальными системами.")
+System(OTPService, "OTP Service", "Java/.NET", "Генерирует и проверяет одноразовые СМС-коды для подтверждения операций.")
+System(ContactCenter, "Платформа кол-центра", "React + Spring Boot + PostgreSQL", "Обработка обращений и звонков клиентам.")
+System(ABS, "АБС банка", "Delphi + Oracle", "Учёт счетов, депозитов и бухгалтерский учёт.")
+System(RatesModule, "Модуль ставок по депозитам", "Oracle/MS SQL", "Централизованное хранилище депозитных ставок.")
+System(SMSGateway, "СМС-шлюз", "Шлюз банка", "Отправка СМС клиентам.")
+System_Ext(Telco, "Телеком-оператор", "Внешний оператор связи", "Доставка СМС сообщений клиентам.")
+
+' Связи
+
+Rel(NewCustomer, Website, "Просмотр депозитов, отправка заявки на депозит", "HTTPS")
+Rel(Website, DepositBackend, "Создать заявку на депозит", "HTTPS/REST")
+
+Rel(ExistingCustomer, InternetBank, "Работа в интернет-банке, подача заявки", "HTTPS")
+Rel(InternetBank, DepositBackend, "Создать заявку, получить список продуктов/статусов", "HTTPS/REST")
+
+Rel(InternetBank, OTPService, "Запрос на отправку и проверку OTP", "HTTPS/REST")
+Rel(OTPService, SMSGateway, "Отправка СМС-кодов", "HTTP/SMPP")
+Rel(SMSGateway, Telco, "Передача СМС", "SMPP")
+
+Rel(DepositBackend, ContactCenter, "Передача заявок с сайта для обзвона", "REST/async")
+Rel(CallCenterAgent, ContactCenter, "Обработка заявок, звонки клиентам", "Web UI / телефон")
+
+Rel(DepositBackend, RatesModule, "Запрос актуальных/персональных ставок", "REST/SQL")
+
+Rel(BackOfficeDep, ABS, "Открытие депозита по заявке, подтверждение условий", "Клиент АБС")
+Rel(DepositBackend, ABS, "Передача подтверждённых заявок на открытие депозита (через интеграционный слой)", "Batch/async")
+
+Rel(ABS, SMSGateway, "Уведомления об открытии депозита", "HTTP/SOAP")
+
+Rel(BranchFO, ABS, "Идентификация клиента, оформление договора в отделении", "Клиент АБС")
+
+@enduml
