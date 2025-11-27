@@ -1,0 +1,51 @@
+@startuml
+!include ./include/C4_Container.puml
+
+title C4 - Rates to Call Centers - Containers
+left to right direction
+
+Person(BackOfficeRates, "Сотр. бэк-офиса депозитов", "Настраивает и обновляет депозитные ставки.")
+Person(CallCenterAgent, "Оператор кол-центра банка", "Консультирует клиентов по ставкам.")
+Person(PartnerAgent, "Оператор партнёрского кол-центра", "Консультирует клиентов по ставкам.")
+
+System_Boundary(core, "Банковские системы") {
+  Container(RatesUI, "Rates UI", "Клиент АБС / веб-интерфейс", "Интерфейс бэк-офиса для управления депозитными ставками.")
+  Container(RatesService, "Rates Service", "Java/.NET + Oracle/MS SQL", "Сервис управления и предоставления ставок по депозитам.")
+  ContainerDb(RatesDB, "Rates DB", "Oracle/MS SQL", "Хранит депозитные ставки, спецставки и историю изменений.")
+}
+
+System_Boundary(cc, "Контакт-центр банка") {
+  Container(CCWeb, "ContactCenter Web UI", "React.js", "Рабочее место оператора кол-центра.")
+  Container(CCAPI, "ContactCenter API", "Spring Boot + PostgreSQL", "Предоставляет данные операторам, хранит обращения.")
+  ContainerDb(CCDB, "ContactCenter DB", "PostgreSQL", "Хранит обращения клиентов и кэш ставок для отчётности.")
+}
+
+System_Boundary(integration, "Выгрузка ставок партнёрам") {
+  Container(FileExportSvc, "Rates File Exporter", "Java/.NET", "Периодически формирует файл ставок (CSV/XML) на основе данных из Rates Service.")
+  Container(FileStore, "File Store", "Файловое хранилище / shared folder", "Промежуточное хранение сформированных файлов ставок.")
+}
+
+System_Ext(PartnerCC, "Система партнёрского кол-центра", "Внешняя система", "Импортирует файлы ставок и отображает их операторам.")
+System_Ext(FileChannel, "Канал передачи файлов", "Email / HTTPS / FTPS и т.п.", "Транспорт для файлов ставок.")
+
+' Связи пользователей
+Rel(BackOfficeRates, RatesUI, "Управляет ставками", "UI")
+Rel(CallCenterAgent, CCWeb, "Консультирует по ставкам", "Web UI")
+Rel(PartnerAgent, PartnerCC, "Консультирует по ставкам", "UI партнёра")
+
+' Связи в банковских системах
+Rel(RatesUI, RatesService, "Создание/изменение ставок", "HTTP/REST или прямой доступ")
+Rel(RatesService, RatesDB, "Чтение/запись ставок", "SQL")
+
+' Контакт-центр банка
+Rel(CCWeb, CCAPI, "Получение ставки для подсказки оператору", "HTTPS/REST")
+Rel(CCAPI, RatesService, "Запрос актуальных ставок", "HTTPS/REST")
+Rel(CCAPI, CCDB, "Хранение обращений и логов запросов", "SQL")
+
+' Выгрузка ставок партнёру
+Rel(FileExportSvc, RatesService, "Периодическое чтение актуальных ставок", "HTTPS/REST/SQL")
+Rel(FileExportSvc, FileStore, "Создание файла ставок (CSV/XML)", "File I/O")
+Rel(FileStore, FileChannel, "Передача файла партнёру (инициируется банком или внешним планировщиком)", "Файловый обмен")
+Rel(FileChannel, PartnerCC, "Доставка файла ставок", "Файл")
+
+@enduml
