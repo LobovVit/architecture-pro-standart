@@ -1,0 +1,31 @@
+
+@startuml
+!include ./include/C4_Container.puml
+LAYOUT_LEFT_RIGHT()
+
+Person(existingCustomer, "Клиент банка")
+Person(newCustomer, "Новый клиент")
+
+Container(publicSite, "Публичный сайт", "React/PHP", "Подача заявки для новых клиентов")
+Container(internetBank, "Интернет-банк", "ASP.NET MVC", "Подача заявок для существующих клиентов")
+Container(creditAPI, "Credit Application API", "C#/.NET or Java", "Создание и обработка кредитных заявок")
+ContainerDb(creditDB, "Credit DB", "PostgreSQL", "Хранение заявок и статусов")
+
+Container(scoring, "Scoring Service", "Python/Flask", "Полный/облегчённый скоринг")
+Container(conveyorAPI, "Conveyor API", "Java/Camunda", "Обработка заявок")
+Container(abs, "АБС", "Oracle", "Данные клиента и счетов")
+Container(bki, "БКИ", "External REST", "Кредитные истории")
+Container(sms, "SMS Gateway", "Internal", "Уведомления")
+
+Rel(newCustomer, publicSite, "Подача заявки")
+Rel(existingCustomer, internetBank, "Подача заявки")
+Rel(publicSite, creditAPI, "POST /application")
+Rel(internetBank, creditAPI, "POST /application")
+Rel(creditAPI, scoring, "REST: /scoring")
+Rel(creditAPI, bki, "REST: /history")
+Rel(creditAPI, abs, "Получение данных клиента")
+Rel(creditAPI, conveyorAPI, "Создание заявки")
+Rel(conveyorAPI, sms, "Отправка статусов")
+Rel(creditAPI, creditDB, "Запись данных", "JDBC")
+
+@enduml

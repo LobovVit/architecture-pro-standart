@@ -1,0 +1,31 @@
+@startuml
+!include ./include/C4_Context.puml
+
+LAYOUT_LEFT_RIGHT()
+
+Person(newCustomer, "Новый клиент", "Подает заявку через сайт")
+Person(existingCustomer, "Клиент банка", "Подает заявку в Интернет-банке")
+
+System_Boundary(apps, "Цифровые каналы") {
+    System(publicSite, "Публичный сайт", "React/PHP")
+    System(internetBank, "Интернет-банк", "ASP.NET MVC")
+}
+
+System(creditAPI, "Credit Application API", "Новый микросервис подачи заявок")
+System(scoring, "Скоринг", "Python/Flask")
+System(conveyor, "Кредитный конвейер", "Camunda BPM")
+System(abs, "АБС", "Oracle + PL/SQL")
+System(bki, "БКИ", "Внешний сервис")
+System(sms, "SMS-шлюз", "Внутренний шлюз")
+
+Rel(newCustomer, publicSite, "Подает заявку")
+Rel(existingCustomer, internetBank, "Подает заявку")
+Rel(publicSite, creditAPI, "REST")
+Rel(internetBank, creditAPI, "REST")
+Rel(creditAPI, scoring, "Скоринг заявки")
+Rel(creditAPI, bki, "Кредитная история")
+Rel(creditAPI, abs, "Информация о клиенте")
+Rel(creditAPI, conveyor, "Создание заявки (online)")
+Rel(conveyor, sms, "Уведомления")
+
+@enduml
