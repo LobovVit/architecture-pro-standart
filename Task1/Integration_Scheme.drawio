@@ -1,0 +1,106 @@
+<mxfile host="drawio-plugin" modified="2025-11-27T11:15:17.918Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" etag="00BKPodpa54Vpg1fNGWV" version="22.1.22" type="embed">
+  <diagram id="B4pgMoJheSQBUMyWDbLi" name="Integration Scheme (Current)">
+    <mxGraphModel dx="608" dy="672" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" value="Интернет-банк&#xa;(ASP.NET MVC + MS SQL)" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="50" y="20" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="Сайт&#xa;(PHP + React)" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="40" y="160" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="Отделения&#xa;(клиент АБС)" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="40" y="240" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="Кол-центр банка&#xa;(операторы)" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="30" y="360" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="Партнёрский кол-центр" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="40" y="480" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="Платформа кол-центра&#xa;(React + Spring Boot, PostgreSQL)" style="rounded=1;fillColor=#fff2cc;strokeColor=#d6b656;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="540" y="470" width="260" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="8" value="АБС&#xa;(Delphi клиент + Oracle, PL/SQL)" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="600" y="230" width="260" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="Excel-калькуляторы&#xa;депозитных ставок" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="550" y="30" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="10" value="E-mail обмен&#xa;(фронт ⇄ депозиты ⇄ кредиты)" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="930" y="60" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="Кредитный конвейер&#xa;(Camunda BPM + Oracle)" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1060" y="340" width="260" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="12" value="Скоринговая система&#xa;(Python/Flask + PostgreSQL)" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1070" y="170" width="260" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="13" value="Бюро кредитных историй&#xa;(внешнее REST API)" style="rounded=1;fillColor=#f5f5f5;strokeColor=#999999;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1400" y="270" width="220" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="14" value="СМС-шлюз банка" style="rounded=1;fillColor=#fff2cc;strokeColor=#d6b656;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="940" y="510" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="15" value="Телеком-оператор" style="rounded=1;fillColor=#f5f5f5;strokeColor=#999999;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1260" y="510" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="16" value="Интеграция по БД / прямой доступ &#xa;к MS SQL серверам,ограниченный &#xa;функционал (платежи, текущие счета)" style="endArrow=classic;strokeColor=#000000;fontSize=10;" parent="1" source="2" target="8" edge="1">
+          <mxGeometry x="-0.1937" y="-2" relative="1" as="geometry">
+            <mxPoint x="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="17" value="Маркетинговый сайт, заявки по&#xa; депозитам/кредитам пока нет" style="endArrow=open;dashed=1;strokeColor=#999999;fontSize=10;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" parent="1" source="3" target="8" edge="1">
+          <mxGeometry x="-0.223" y="-1" relative="1" as="geometry">
+            <mxPoint x="290" y="190" as="targetPoint" />
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="420" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="18" value="Онлайн работа в клиенте &#xa;АБС (толстый клиент)" style="endArrow=classic;strokeColor=#000000;fontSize=10;" parent="1" source="4" target="8" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="19" value="Онлайн работа &#xa;операторов в веб-CRM" style="endArrow=classic;strokeColor=#000000;fontSize=10;" parent="1" source="5" target="7" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="20" value="Отчёты/выгрузки с заявками&#xa;(ручной или файловый обмен)" style="endArrow=classic;dashed=1;strokeColor=#000000;fontSize=10;" parent="1" source="6" target="7" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="21" value="Онлайн API/интеграция: обращения&#xa; и заявки по депозитам/кредитам" style="endArrow=classic;strokeColor=#000000;fontSize=10;" parent="1" source="7" target="8" edge="1">
+          <mxGeometry x="-0.083" y="8" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="22" value="Ежедневная ручная загрузка &#xa;параметров ставок из Excel&#xa;(ручной процесс)" style="endArrow=classic;dashed=1;strokeColor=#b85450;fontSize=10;" parent="1" source="9" target="8" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="23" value="Ручные согласования спецставок&#xa;фронт-офис ⇄ депозиты ⇄ кредиты" style="endArrow=open;dashed=1;strokeColor=#b85450;fontSize=10;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" parent="1" source="10" target="8" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="710" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="24" value="Раз в сутки: выгрузка заявок по БД&#xa;(batch, без онлайн API)" style="endArrow=classic;strokeColor=#000000;fontSize=10;" parent="1" source="8" target="11" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="25" value="Онлайн REST-запрос скоринга&#xa;на каждый кейс" style="endArrow=classic;strokeColor=#000000;fontSize=10;" parent="1" source="11" target="12" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="26" value="Онлайн REST к БКИ" style="endArrow=classic;strokeColor=#000000;fontSize=10;" parent="1" source="12" target="13" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="27" value="Раз в сутки: статусы одобренных заявок&#xa;и параметры кредитов в АБС" style="endArrow=classic;strokeColor=#000000;fontSize=10;" parent="1" source="11" target="8" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="28" value="Онлайн события: генерация &#xa;СМС (ставка, решение, операции)" style="endArrow=classic;strokeColor=#000000;fontSize=10;" parent="1" source="8" target="14" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="29" value="SMPP/HTTP, онлайн" style="endArrow=classic;strokeColor=#000000;fontSize=10;" parent="1" source="14" target="15" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
