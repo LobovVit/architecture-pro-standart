@@ -1,0 +1,80 @@
+@startuml
+!include ./include/C4_Container.puml
+
+title C4 - Deposit MVP - Containers
+left to right direction
+
+Person(NewCustomer, "Новый клиент", "Подаёт заявки на депозиты через сайт.")
+Person(ExistingCustomer, "Клиент банка", "Использует интернет-банк для открытия депозитов.")
+Person(CallCenterAgent, "Менеджер кол-центра", "Обзванивает клиентов по заявкам.")
+Person(BackOfficeDep, "Сотр. бэк-офиса депозитов", "Подтверждает условия и открывает депозиты в АБС.")
+
+System_Boundary(online, "Онлайн-каналы") {
+
+  Container(Website, "Публичный сайт", "PHP + React.js", "Показывает маркетинговую информацию и форму заявки на депозит.")
+  Container(InternetBank, "Интернет-банк", "ASP.NET MVC + MS SQL", "Личный кабинет клиента. Модуль Deposits Online MVP.")
+
+  Container(DepositBackend, "Deposit Onboarding Service", "Java/Spring или .NET + MS SQL", "Принимает заявки, хранит статусы, интегрируется с АБС и кол-центром.")
+  ContainerDb(DepositDB, "DepositDB", "MS SQL", "Хранит заявки клиентов и историю статусов.")
+
+  Container(OTPService, "OTP Service", "Java/.NET + Redis/MS SQL", "Генерация и проверка одноразовых СМС-кодов.")
+}
+
+System_Boundary(cc_boundary, "Контакт-центр") {
+  Container(ContactCenterUI, "ContactCenter Web UI", "React.js", "Рабочее место оператора.")
+  Container(ContactCenterAPI, "ContactCenter API", "Spring Boot + PostgreSQL", "Обработка обращений.")
+  ContainerDb(ContactCenterDB, "ContactCenterDB", "PostgreSQL", "Хранит обращения клиентов.")
+}
+
+System_Boundary(core, "Банковские системы") {
+  Container(ABSClient, "ABS Desktop Client", "Delphi", "Рабочее место сотрудников.")
+  Container(ABSCore, "ABS Core", "Oracle PL/SQL", "Учёт депозитов и проведение операций.")
+  ContainerDb(ABSDB, "ABS DB", "Oracle", "Хранение продуктовых данных.")
+
+  Container(RatesModule, "Модуль ставок", "Oracle/MS SQL", "Централизованное управление депозитными ставками.")
+}
+
+System_Boundary(infra, "Инфраструктура уведомлений") {
+  Container(SMSGateway, "СМС-шлюз", "Шлюз банка", "Отправка сообщений клиентам.")
+}
+
+System_Ext(Telco, "Телеком-оператор", "Внешний оператор связи", "Доставка СМС клиентам.")
+
+' --- Связи пользователей ---
+
+Rel(NewCustomer, Website, "Просмотр депозитов и подача заявки", "HTTPS")
+Rel(ExistingCustomer, InternetBank, "Подача и просмотр заявок", "HTTPS")
+Rel(CallCenterAgent, ContactCenterUI, "Обработка обращений", "Web UI")
+Rel(BackOfficeDep, ABSClient, "Ручная обработка заявок в АБС", "Thick Client")
+
+' --- Связи онлайн-каналов ---
+
+Rel(Website, DepositBackend, "Создать заявку", "HTTPS/REST")
+Rel(InternetBank, DepositBackend, "Создать заявку, запросить продукты", "HTTPS/REST")
+Rel(DepositBackend, DepositDB, "CRUD заявок", "SQL/JDBC")
+
+Rel(InternetBank, OTPService, "Запрос/проверка OTP", "HTTPS/REST")
+Rel(OTPService, SMSGateway, "Отправка OTP-кода", "HTTP")
+
+' --- Контакт-центр ---
+
+Rel(DepositBackend, ContactCenterAPI, "Передача заявок для обзвона", "REST/async")
+Rel(ContactCenterAPI, ContactCenterDB, "CRUD обращений", "SQL")
+
+' --- АБС ---
+
+Rel(DepositBackend, ABSCore, "Передача подтверждённых заявок", "Batch/async")
+Rel(ABSCore, ABSDB, "Запись данных по депозиту", "SQL")
+Rel(ABSClient, ABSCore, "Работа сотрудников", "Proprietary Protocol")
+
+' --- Ставки ---
+
+Rel(DepositBackend, RatesModule, "Получение ставок", "REST/SQL")
+Rel(BackOfficeDep, RatesModule, "Изменение ставок", "UI/Client")
+
+' --- СМС уведомления ---
+
+Rel(ABSCore, SMSGateway, "Уведомления об открытии депозита", "HTTP")
+Rel(SMSGateway, Telco, "Доставка СМС", "SMPP")
+
+@enduml

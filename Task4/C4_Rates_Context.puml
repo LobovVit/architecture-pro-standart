@@ -1,0 +1,25 @@
+@startuml
+!include ./include/C4_Context.puml
+
+title C4 - Rates to Call Centers - Context
+
+Person(BackOfficeRates, "Сотр. бэк-офиса депозитов", "Настраивает и обновляет депозитные ставки.")
+Person(CallCenterAgent, "Оператор кол-центра банка", "Консультирует клиентов по условиям депозитов.")
+Person(PartnerAgent, "Оператор партнёрского кол-центра", "Консультирует клиентов по условиям депозитов по договору аутсорсинга.")
+
+System(RatesModule, "Модуль ставок по депозитам", "Oracle/MS SQL", "Централизованное хранение и управление депозитными ставками.")
+System(ContactCenter, "Платформа кол-центра банка", "React + Spring Boot + PostgreSQL", "Обработка звонков и обращений клиентов.")
+System_Ext(PartnerCC, "Система партнёрского кол-центра", "Внешняя система", "Поддержка операторов партнёрского кол-центра.")
+System(SystemFileExporter, "Сервис выгрузки ставок", "File Export Service", "Формирует файлы со ставками для внешних получателей.")
+System_Ext(FileChannel, "Канал передачи файлов", "Email / HTTPS / FTPS и т.п.", "Канал передачи файлов ставок партнёру (без API).")
+
+Rel(BackOfficeRates, RatesModule, "Создаёт и обновляет ставки", "UI / клиент АБС")
+Rel(ContactCenter, RatesModule, "Запрашивает актуальные ставки для операторов", "REST/SQL")
+Rel(CallCenterAgent, ContactCenter, "Просматривает ставки и консультирует клиентов", "Web UI")
+
+Rel(SystemFileExporter, RatesModule, "Читает актуальные ставки для выгрузки", "SQL/REST")
+Rel(SystemFileExporter, FileChannel, "Формирует и передаёт файл ставок", "CSV/XML файл")
+Rel(FileChannel, PartnerCC, "Доставка файла ставок", "Файловый обмен")
+Rel(PartnerAgent, PartnerCC, "Просматривает ставки и консультирует клиентов", "Web UI/клиент партнёра")
+
+@enduml
